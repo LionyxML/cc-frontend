@@ -2,6 +2,11 @@
   "name": "cc-frontend",
   "version": "0.1.0",
   "private": true,
+   "engines": {
+    "node": ">=14.17.0",
+    "yarn": ">=1.22.15",
+    "npm": "PLEASE_USE_YARN"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
