@@ -10,10 +10,10 @@ export const BaseStyles = createGlobalStyle`
       z-index: 1000;
     }
   }
+
   body, html{
     min-height: 100%;
     overflow-y: hidden;
-    font-family: Arial; 
   }
 
   .MuiGrid-root {

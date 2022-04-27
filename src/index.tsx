@@ -1,4 +1,5 @@
 import React from "react";
+import { CssBaseline } from "@mui/material";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
@@ -11,6 +12,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
+      <CssBaseline />
       <BaseStyles />
       <ThemeProvider theme={defaultTheme}>
         <App />
