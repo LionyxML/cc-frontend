@@ -2,7 +2,7 @@
   "name": "cc-frontend",
   "version": "0.1.0",
   "private": true,
-   "engines": {
+  "engines": {
     "node": ">=14.17.0",
     "yarn": ">=1.22.15",
     "npm": "PLEASE_USE_YARN"
@@ -20,6 +20,8 @@
     "eslint-plugin-react": "^7.29.4",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "6",
     "react-scripts": "5.0.1",
     "typescript": "^4.6.3",
     "web-vitals": "^2.1.4"
