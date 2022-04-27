@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
+import { BaseStyles, defaultTheme } from "./themes";
 import App from "./App";
 
 const root = ReactDOM.createRoot(
@@ -9,7 +11,10 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <BaseStyles />
+      <ThemeProvider theme={defaultTheme}>
+        <App />
+      </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
