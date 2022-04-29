@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from "react";
 import {
   Avatar,
@@ -10,6 +11,14 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import {
+  FieldValues,
+  SubmitErrorHandler,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { CopyrightLine } from "../../components";
 import {
   SContainer,
@@ -20,18 +29,48 @@ import {
   SBox,
 } from "./styles";
 
+const RegisterSchema = yup.object().shape({
+  userName: yup
+    .string()
+    .required("Obrigatório")
+    .min(5, "Mínimo 5 Letras")
+    .test("without-space", "Não pode ter espaço", (value) =>
+      Boolean(!value?.includes(" "))
+    ),
+  firstName: yup.string().required("Obrigatório").min(2, "Mínimo 2 letras"),
+  lastName: yup.string().required("Obrigatório").min(2, "Mínimo 2 letras"),
+  email: yup.string().required("Obrigatório").email("E-mail inválido"),
+  password: yup
+    .string()
+    .required("Obrigatório")
+    .min(6, "Maior do que 6 caracteres")
+    .matches(
+      /^[0-9A-Za-z]*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?][0-9a-zA-Z]*$/,
+      "Necessário 1 caractere especial"
+    ),
+  passwordConfirmation: yup
+    .string()
+    .required("A confirmação é necessária")
+    .oneOf([yup.ref("password"), null], "As senhas são diferentes!"),
+});
+
 export const RegisterPage: React.FC = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-      passwordConfirmation: data.get("passwordConfirmation"),
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(RegisterSchema),
+  });
+  const onSubmit: SubmitHandler<FieldValues> = (data): void => {
+    console.info(">>>", data);
   };
+
+  const onError: SubmitErrorHandler<FieldValues> = (errorData): void => {
+    console.error(">>>", errorData);
+  };
+
+  // TODO: UserName
 
   return (
     <SContainer>
@@ -67,46 +106,60 @@ export const RegisterPage: React.FC = () => {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit(onSubmit, onError)}
               sx={{ mt: 3 }}
             >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    autoComplete="given-name"
-                    name="firstName"
-                    required
+                    {...register("firstName")}
+                    error={Boolean(errors.firstName)}
+                    helperText={errors?.firstName?.message}
                     fullWidth
                     id="firstName"
                     label="Nome"
-                    autoFocus
+                    autoComplete="given-name"
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    required
+                    {...register("lastName")}
+                    error={Boolean(errors.lastName)}
+                    helperText={errors?.lastName?.message}
                     fullWidth
                     id="lastName"
                     label="Sobrenome"
-                    name="lastName"
                     autoComplete="family-name"
                   />
                 </Grid>
               </Grid>
               <TextField
                 margin="normal"
-                required
+                fullWidth
+                id="userName"
+                label="Nome de usuário"
+                {...register("userName")}
+                error={Boolean(errors.userName)}
+                helperText={errors?.userName?.message}
+                autoComplete="username"
+              />
+
+              <TextField
+                margin="normal"
                 fullWidth
                 id="email"
                 label="Endereço de e-mail"
-                name="email"
+                {...register("email")}
+                error={Boolean(errors.email)}
+                helperText={errors?.email?.message}
                 autoComplete="email"
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
-                name="password"
+                {...register("password")}
+                error={Boolean(errors.password)}
+                helperText={errors?.password?.message}
                 label="Senha"
                 type="password"
                 id="password"
@@ -114,9 +167,10 @@ export const RegisterPage: React.FC = () => {
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
-                name="passwordConfirmation"
+                {...register("passwordConfirmation")}
+                error={Boolean(errors.passwordConfirmation)}
+                helperText={errors?.passwordConfirmation?.message}
                 label="Confirmação da senha"
                 type="password"
                 id="passwordConfirmation"
