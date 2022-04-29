@@ -6,13 +6,19 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
-  Link,
-  Paper,
   TextField,
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { SContainer } from "./styles";
+import { CopyrightLine } from "../../components";
+import {
+  SContainer,
+  SGridLeftPanel,
+  SGridRightPanel,
+  SGridOutter,
+  SLink,
+  SBox,
+} from "./styles";
 
 export const LoginPage: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
@@ -26,32 +32,24 @@ export const LoginPage: React.FC = () => {
 
   return (
     <SContainer>
-      <Grid container component="main" sx={{ height: "100vh" }}>
-        <Grid
+      <SGridOutter container>
+        <SGridLeftPanel
           item
           xs={false}
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              "url(https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260)",
-            backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
                 ? t.palette.grey[50]
                 : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
+        <SGridRightPanel item xs={12} sm={8} md={5}>
+          <SBox
             sx={{
               my: 8,
               mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
             }}
           >
             <Typography variant="h2" sx={{ m: 4 }}>
@@ -67,7 +65,7 @@ export const LoginPage: React.FC = () => {
               component="form"
               noValidate
               onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
+              sx={{ mt: 3 }}
             >
               <TextField
                 margin="normal"
@@ -103,32 +101,19 @@ export const LoginPage: React.FC = () => {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="https://google.com" variant="body2">
-                    Esqueceu sua senha?
-                  </Link>
+                  <SLink to="/register">Esqueceu sua senha?</SLink>
                 </Grid>
                 <Grid item>
-                  <Link href="https://google.com" variant="body2">
+                  <SLink to="/register">
                     Ainda não tem sua conta? Registre-se.
-                  </Link>
+                  </SLink>
                 </Grid>
               </Grid>
-              <Typography
-                sx={{ mt: 5 }}
-                variant="body2"
-                color="text.secondary"
-                align="center"
-              >
-                {"Copyright © "}
-                <Link color="inherit" href="https://rmjsoftware.com/">
-                  RMJ Software
-                </Link>{" "}
-                {new Date().getFullYear()}
-              </Typography>
+              <CopyrightLine />
             </Box>
-          </Box>
-        </Grid>
-      </Grid>
+          </SBox>
+        </SGridRightPanel>
+      </SGridOutter>
     </SContainer>
   );
 };

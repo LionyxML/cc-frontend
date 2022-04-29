@@ -44,7 +44,6 @@ export const SGridRightPanel = styled(Grid)`
   && {
     background-color: ${({ theme }) => theme.colors.bgPrimary};
     color: ${({ theme }) => theme.colors.textDefault};
-    width: 100%;
   }
 `;
 
