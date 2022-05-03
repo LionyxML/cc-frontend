@@ -7,6 +7,7 @@ export interface UserRegisterDataType {
   passwordConfirmation: string;
   firstName: string;
   lastName: string;
+  profilePic: string;
 }
 
 export const useRegisterUser = (): typeof hookReturn => {
@@ -16,7 +17,8 @@ export const useRegisterUser = (): typeof hookReturn => {
 
   const sendUserRegistration = async (
     userData: UserRegisterDataType
-  ): Promise<JSON> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any> => {
     setIsLoading(true);
     const data = await apiRegisterUser(userData);
     setResponse(data);

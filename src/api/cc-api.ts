@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserRegisterDataType } from "./hooks";
+import { UserRegisterDataType } from "./userHooks";
 
 export const useAPI = (): typeof hookReturn => {
   const api = axios.create({
@@ -8,16 +8,20 @@ export const useAPI = (): typeof hookReturn => {
   });
 
   // eslint-disable-next-line
-  const apiRegisterUser = async (userData: UserRegisterDataType): Promise<any> => {
+  const apiRegisterUser = async (
+    userData: UserRegisterDataType
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any> => {
     try {
-      const { data } = await api.post(
-        `users/register/`,
-        JSON.stringify(userData)
-      );
+      const { data } = await api.post(`users/register/`, userData);
 
       return data;
-    } catch {
-      return { status: "error", message: "could not reach server" };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return {
+        status: error.response.data.status,
+        msg: error.response.data.msg,
+      };
     }
   };
 

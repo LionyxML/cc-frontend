@@ -1,15 +1,19 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from "react";
+import React, { useState } from "react";
 import {
+  Alert,
+  AlertTitle,
   Avatar,
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
+  CircularProgress,
   Grid,
+  InputLabel,
+  LinearProgress,
   TextField,
   Typography,
 } from "@mui/material";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {
   FieldValues,
@@ -19,6 +23,7 @@ import {
 } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useNavigate } from "react-router";
 import { CopyrightLine } from "../../components";
 import {
   SContainer,
@@ -28,6 +33,10 @@ import {
   SLink,
   SBox,
 } from "./styles";
+import { useRegisterUser, UserRegisterDataType } from "../../api";
+import { convertFileToBase64, miliSecondsDelay } from "../../utils";
+
+const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 
 const RegisterSchema = yup.object().shape({
   userName: yup
@@ -52,9 +61,29 @@ const RegisterSchema = yup.object().shape({
     .string()
     .required("A confirmação é necessária")
     .oneOf([yup.ref("password"), null], "As senhas são diferentes!"),
+  profilePic: yup
+    .mixed()
+    .nullable()
+    .required("Um arquivo é necessário")
+    .test(
+      "file-size",
+      "O arquivo é muito grande, 6MB no máximo",
+      (value) => !value[0] || (value[0] && value[0].size <= 1024 * 1024 * 6)
+    )
+    .test(
+      "file-format",
+      "Esse formato não é suportato. Apenas JPG, JPEG ou PNG.",
+      (value) =>
+        !value[0] || (value[0] && SUPPORTED_FORMATS.includes(value[0].type))
+    ),
 });
 
 export const RegisterPage: React.FC = () => {
+  const { loading: isLoading, send: sendUserRegistration } = useRegisterUser();
+  const [registrationDone, setRegistrationDone] = useState(false);
+  const [registrationError, setRegistrationError] = useState(false);
+  const [serverErrorMessage, setServerErrorMessage] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -62,15 +91,34 @@ export const RegisterPage: React.FC = () => {
   } = useForm({
     resolver: yupResolver(RegisterSchema),
   });
-  const onSubmit: SubmitHandler<FieldValues> = (data): void => {
-    console.info(">>>", data);
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data): Promise<void> => {
+    const base64Img =
+      data.profilePic[0] !== null && data.profilePic[0] !== undefined
+        ? await convertFileToBase64(data.profilePic[0])
+        : "";
+
+    const post = await sendUserRegistration({
+      ...data,
+      profilePic: base64Img,
+    } as UserRegisterDataType);
+
+    if (post.status === "success") {
+      setRegistrationDone(true);
+      await miliSecondsDelay(2000);
+      navigate("../", { replace: true });
+    }
+
+    if (post.status === "error") {
+      setRegistrationError(true);
+      setServerErrorMessage(post.msg);
+    }
   };
 
   const onError: SubmitErrorHandler<FieldValues> = (errorData): void => {
     console.error(">>>", errorData);
   };
-
-  // TODO: UserName
 
   return (
     <SContainer>
@@ -103,99 +151,157 @@ export const RegisterPage: React.FC = () => {
             <Typography component="h1" variant="h5">
               Registrar
             </Typography>
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit(onSubmit, onError)}
-              sx={{ mt: 3 }}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    {...register("firstName")}
-                    error={Boolean(errors.firstName)}
-                    helperText={errors?.firstName?.message}
-                    fullWidth
-                    id="firstName"
-                    label="Nome"
-                    autoComplete="given-name"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    {...register("lastName")}
-                    error={Boolean(errors.lastName)}
-                    helperText={errors?.lastName?.message}
-                    fullWidth
-                    id="lastName"
-                    label="Sobrenome"
-                    autoComplete="family-name"
-                  />
-                </Grid>
-              </Grid>
-              <TextField
-                margin="normal"
-                fullWidth
-                id="userName"
-                label="Nome de usuário"
-                {...register("userName")}
-                error={Boolean(errors.userName)}
-                helperText={errors?.userName?.message}
-                autoComplete="username"
-              />
 
-              <TextField
-                margin="normal"
-                fullWidth
-                id="email"
-                label="Endereço de e-mail"
-                {...register("email")}
-                error={Boolean(errors.email)}
-                helperText={errors?.email?.message}
-                autoComplete="email"
-              />
-              <TextField
-                margin="normal"
-                fullWidth
-                {...register("password")}
-                error={Boolean(errors.password)}
-                helperText={errors?.password?.message}
-                label="Senha"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <TextField
-                margin="normal"
-                fullWidth
-                {...register("passwordConfirmation")}
-                error={Boolean(errors.passwordConfirmation)}
-                helperText={errors?.passwordConfirmation?.message}
-                label="Confirmação da senha"
-                type="password"
-                id="passwordConfirmation"
-                autoComplete="none"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Quero receber notícias e novidades por e-mail"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+            {registrationDone ? (
+              <Alert severity="success" sx={{ mt: 12, p: 5, width: "100%" }}>
+                <AlertTitle>Sucesso!</AlertTitle>
+                Redirecionando para a tela de <strong>login!</strong>
+                <LinearProgress color="success" sx={{ mt: 4 }} />
+              </Alert>
+            ) : null}
+
+            {registrationError ? (
+              <Alert severity="error" sx={{ mt: 1, p: 1, width: "100%" }}>
+                <AlertTitle>Erro!</AlertTitle>
+                O servidor retornou um erro:
+                <br /> <br />
+                {serverErrorMessage}
+                <br /> <br />
+                <strong>Tente novamente!</strong>
+              </Alert>
+            ) : null}
+
+            {!isLoading && !registrationDone ? (
+              <Box
+                component="form"
+                noValidate
+                onSubmit={handleSubmit(onSubmit, onError)}
+                sx={{ mt: 3 }}
               >
-                Registrar
-              </Button>
-              <Grid container>
-                <Grid item xs />
-                <Grid item>
-                  <SLink to="/">Já tem uma conta? Faça Login.</SLink>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      {...register("firstName")}
+                      error={Boolean(errors.firstName)}
+                      helperText={errors?.firstName?.message}
+                      fullWidth
+                      id="firstName"
+                      label="Nome"
+                      autoComplete="given-name"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      {...register("lastName")}
+                      error={Boolean(errors.lastName)}
+                      helperText={errors?.lastName?.message}
+                      fullWidth
+                      id="lastName"
+                      label="Sobrenome"
+                      autoComplete="family-name"
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-              <CopyrightLine />
-            </Box>
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  id="userName"
+                  label="Nome de usuário"
+                  {...register("userName")}
+                  error={Boolean(errors.userName)}
+                  helperText={errors?.userName?.message}
+                  autoComplete="username"
+                  sx={{ m: 0, p: 0, marginTop: "0.5rem" }}
+                />
+
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  id="email"
+                  label="Endereço de e-mail"
+                  {...register("email")}
+                  error={Boolean(errors.email)}
+                  helperText={errors?.email?.message}
+                  autoComplete="email"
+                  sx={{ m: 0, p: 0, marginTop: "0.5rem" }}
+                />
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  {...register("password")}
+                  error={Boolean(errors.password)}
+                  helperText={errors?.password?.message}
+                  label="Senha"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  sx={{ m: 0, p: 0, marginTop: "0.5rem" }}
+                />
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  {...register("passwordConfirmation")}
+                  error={Boolean(errors.passwordConfirmation)}
+                  helperText={errors?.passwordConfirmation?.message}
+                  label="Confirmação da senha"
+                  type="password"
+                  id="passwordConfirmation"
+                  autoComplete="none"
+                  sx={{ m: 0, p: 0, marginTop: "0.5rem" }}
+                />
+
+                <Button
+                  variant="contained"
+                  component="label"
+                  fullWidth
+                  sx={{ m: 0, p: 0, marginTop: "0.5rem", height: "2rem" }}
+                  startIcon={<FileUploadIcon />}
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id="profilePic"
+                    {...register("profilePic")}
+                  />
+                </Button>
+                <InputLabel error={Boolean(errors.profilePic)}>
+                  {errors?.profilePic?.message}
+                </InputLabel>
+
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Registrar
+                </Button>
+                <Grid container>
+                  <Grid item xs />
+                  <Grid item>
+                    <SLink to="/">Já tem uma conta? Faça Login.</SLink>
+                  </Grid>
+                </Grid>
+                <CopyrightLine />
+              </Box>
+            ) : (
+              !registrationDone && (
+                <Box
+                  component="form"
+                  noValidate
+                  onSubmit={handleSubmit(onSubmit, onError)}
+                  sx={{
+                    mt: 3,
+                    height: "500px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              )
+            )}
           </SBox>
         </SGridRightPanel>
       </SGridOutter>
