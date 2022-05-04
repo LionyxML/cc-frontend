@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserRegisterDataType } from "./userHooks";
+import { UserLoginDataType, UserRegisterDataType } from "./userHooks";
 
 export const useAPI = (): typeof hookReturn => {
   const api = axios.create({
@@ -25,8 +25,27 @@ export const useAPI = (): typeof hookReturn => {
     }
   };
 
+  // eslint-disable-next-line
+  const apiLoginUser = async (
+    userData: UserLoginDataType
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any> => {
+    try {
+      const { data } = await api.post(`users/login/`, userData);
+
+      return data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return {
+        status: error.response.data.status,
+        msg: error.response.data.msg,
+      };
+    }
+  };
+
   const hookReturn = {
     apiRegisterUser,
+    apiLoginUser,
   };
 
   return hookReturn;

@@ -53,5 +53,7 @@ export const SBox = styled(Box)`
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100vh;
+    overflow-y: auto;
   }
 `;

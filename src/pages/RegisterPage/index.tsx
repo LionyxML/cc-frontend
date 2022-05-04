@@ -105,6 +105,7 @@ export const RegisterPage: React.FC = () => {
     } as UserRegisterDataType);
 
     if (post.status === "success") {
+      setRegistrationError(false);
       setRegistrationDone(true);
       await miliSecondsDelay(2000);
       navigate("../", { replace: true });
@@ -153,7 +154,7 @@ export const RegisterPage: React.FC = () => {
             </Typography>
 
             {registrationDone ? (
-              <Alert severity="success" sx={{ mt: 12, p: 5, width: "100%" }}>
+              <Alert severity="success" sx={{ mt: 12, p: 5, width: 410 }}>
                 <AlertTitle>Sucesso!</AlertTitle>
                 Redirecionando para a tela de <strong>login!</strong>
                 <LinearProgress color="success" sx={{ mt: 4 }} />
@@ -161,9 +162,9 @@ export const RegisterPage: React.FC = () => {
             ) : null}
 
             {registrationError ? (
-              <Alert severity="error" sx={{ mt: 1, p: 1, width: "100%" }}>
+              <Alert severity="error" sx={{ m: 2, p: 2, minWidth: 410 }}>
                 <AlertTitle>Erro!</AlertTitle>
-                O servidor retornou um erro:
+                O servidor retornou o seguinte erro:
                 <br /> <br />
                 {serverErrorMessage}
                 <br /> <br />
@@ -287,9 +288,6 @@ export const RegisterPage: React.FC = () => {
             ) : (
               !registrationDone && (
                 <Box
-                  component="form"
-                  noValidate
-                  onSubmit={handleSubmit(onSubmit, onError)}
                   sx={{
                     mt: 3,
                     height: "500px",
