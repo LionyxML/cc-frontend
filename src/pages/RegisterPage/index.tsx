@@ -138,8 +138,8 @@ export const RegisterPage: React.FC = () => {
         <SGridRightPanel item xs={12} sm={8} md={5}>
           <SBox
             sx={{
-              my: 8,
-              mx: 4,
+              py: 8,
+              px: 4,
             }}
           >
             <Typography variant="h2" sx={{ m: 4 }}>
