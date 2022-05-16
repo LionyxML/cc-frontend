@@ -54,7 +54,7 @@ const RegisterSchema = yup.object().shape({
     .required("Obrigatório")
     .min(6, "Maior do que 6 caracteres")
     .matches(
-      /^[0-9A-Za-z]*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?][0-9a-zA-Z]*$/,
+      /^[0-9A-Za-z]*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?].*[0-9a-zA-Z]*$/,
       "Necessário 1 caractere especial"
     ),
   passwordConfirmation: yup
@@ -117,8 +117,8 @@ export const RegisterPage: React.FC = () => {
     }
   };
 
-  const onError: SubmitErrorHandler<FieldValues> = (errorData): void => {
-    console.error(">>>", errorData);
+  const onError: SubmitErrorHandler<FieldValues> = (): void => {
+    // eslint-disable
   };
 
   return (

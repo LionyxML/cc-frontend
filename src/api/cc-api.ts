@@ -43,9 +43,14 @@ export const useAPI = (): typeof hookReturn => {
     }
   };
 
+  const apiSetAuthorization = (token: string): void => {
+    api.defaults.headers.common.Authorization = token;
+  };
+
   const hookReturn = {
     apiRegisterUser,
     apiLoginUser,
+    apiSetAuthorization,
   };
 
   return hookReturn;

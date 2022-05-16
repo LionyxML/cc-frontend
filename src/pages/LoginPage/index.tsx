@@ -31,6 +31,7 @@ import {
   SBox,
 } from "./styles";
 import { useLoginUser, UserRegisterDataType } from "../../api";
+import { useAPI } from "../../api/cc-api";
 
 const LoginSchema = yup.object().shape({
   email: yup.string().required("Obrigatório").email("E-mail inválido"),
@@ -39,7 +40,7 @@ const LoginSchema = yup.object().shape({
     .required("Obrigatório")
     .min(6, "Maior do que 6 caracteres")
     .matches(
-      /^[0-9A-Za-z]*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?][0-9a-zA-Z]*$/,
+      /^[0-9A-Za-z]*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?].*[0-9a-zA-Z]*$/,
       "Necessário 1 caractere especial"
     ),
 });
@@ -56,11 +57,7 @@ export const LoginPage: React.FC = () => {
   const [loginDone, setLoginDone] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [serverErrorMessage, setServerErrorMessage] = useState("");
-
-  // TODO:
-  // - Save JWT on local storage
-  // - Check for local storage for valid JWT
-  // - Clean all console.log statements
+  const { apiSetAuthorization } = useAPI();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data): Promise<void> => {
     const post = await sendUserRegistration({
@@ -70,6 +67,8 @@ export const LoginPage: React.FC = () => {
     if (post.status === "success") {
       setLoginError(false);
       setLoginDone(true);
+      localStorage.setItem("token", post.token);
+      apiSetAuthorization(post.token);
     }
 
     if (post.status === "error") {
@@ -78,8 +77,8 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const onError: SubmitErrorHandler<FieldValues> = (errorData): void => {
-    console.error(">>>", errorData);
+  const onError: SubmitErrorHandler<FieldValues> = (): void => {
+    // eslint-disable
   };
 
   return (
