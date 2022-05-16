@@ -11,7 +11,7 @@ export const CopyrightLine: React.FC = () => {
       align="center"
     >
       {"Copyright © "}
-      <SExtLink href="http://rmjsoftware.com">RMJ Software</SExtLink>{" "}
+      <SExtLink href="https://cbstech.com.br">CBS Tech</SExtLink>{" "}
       {new Date().getFullYear()}
     </Typography>
   );
