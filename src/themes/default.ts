@@ -38,6 +38,7 @@ const themeProps = {
     removeButtonPrimary: "#254057",
     removeButtonSecondary: "rgba(223, 11, 11, 0.48)",
     removeButtonText: "#FFFFFF",
+    bgNavbar: "#1976d2",
   },
 };
 

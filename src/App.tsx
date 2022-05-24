@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router";
+import { NavBar } from "./components";
 import {
   LoginPage,
   RegisterPage,
@@ -7,18 +8,23 @@ import {
   ComparatorsPage,
   CertificatesPage,
   NotFoundPage,
+  Home,
 } from "./pages";
 
 const App: React.FC = () => {
   return (
-    <Routes>
-      <Route path="/" element={<LoginPage />} />
-      <Route path="register" element={<RegisterPage />} />
-      <Route path="profile" element={<ProfilePage />} />
-      <Route path="comparator" element={<ComparatorsPage />} />
-      <Route path="certificates" element={<CertificatesPage />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route path="profile" element={<ProfilePage />} />
+        <Route path="comparator" element={<ComparatorsPage />} />
+        <Route path="certificates" element={<CertificatesPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </>
   );
 };
 

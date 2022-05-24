@@ -21,6 +21,7 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { CopyrightLine } from "../../components";
 import {
   SContainer,
@@ -31,7 +32,7 @@ import {
   SBox,
 } from "./styles";
 import { useLoginUser, UserRegisterDataType } from "../../api";
-import { useAPI } from "../../api/cc-api";
+import { useUser } from "../../domain";
 
 const LoginSchema = yup.object().shape({
   email: yup.string().required("Obrigatório").email("E-mail inválido"),
@@ -57,7 +58,8 @@ export const LoginPage: React.FC = () => {
   const [loginDone, setLoginDone] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [serverErrorMessage, setServerErrorMessage] = useState("");
-  const { apiSetAuthorization } = useAPI();
+  const { setCurrentUser } = useUser();
+  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data): Promise<void> => {
     const post = await sendUserRegistration({
@@ -67,8 +69,8 @@ export const LoginPage: React.FC = () => {
     if (post.status === "success") {
       setLoginError(false);
       setLoginDone(true);
-      localStorage.setItem("token", post.token);
-      apiSetAuthorization(post.token);
+      setCurrentUser(post);
+      navigate("../", { replace: true });
     }
 
     if (post.status === "error") {
