@@ -7,12 +7,18 @@ import {
   Box,
   Button,
   CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
+  IconButton,
   LinearProgress,
   TextField,
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
@@ -60,6 +66,7 @@ export const LoginPage: React.FC = () => {
   const [serverErrorMessage, setServerErrorMessage] = useState("");
   const { setCurrentUser } = useUser();
   const navigate = useNavigate();
+  const [passRecoveryOpen, setPassRecoveryOpen] = useState(false);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data): Promise<void> => {
     const post = await sendUserRegistration({
@@ -174,7 +181,9 @@ export const LoginPage: React.FC = () => {
                 </Button>
                 <Grid container>
                   <Grid item xs>
-                    <SLink to="/register">Esqueceu sua senha?</SLink>
+                    <SLink to="#" onClick={() => setPassRecoveryOpen(true)}>
+                      Esqueceu sua senha?
+                    </SLink>
                   </Grid>
                   <Grid item>
                     <SLink to="/register">
@@ -201,6 +210,39 @@ export const LoginPage: React.FC = () => {
             )}
           </SBox>
         </SGridRightPanel>
+        <Dialog open={passRecoveryOpen}>
+          <DialogTitle>
+            Recuperação de senha
+            <IconButton
+              aria-label="close"
+              onClick={() => setPassRecoveryOpen(false)}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent dividers sx={{ p: 5 }}>
+            <DialogContentText>
+              <Typography>
+                Para aumentar sua segurança, não realizamos recuperação
+                automatizada de senhas.
+              </Typography>
+              <br />
+              <Typography>
+                Entre em contato com nosso suporte através dos{" "}
+                <SLink to="/contacts" style={{ fontSize: "1rem" }}>
+                  contatos
+                </SLink>
+                .
+              </Typography>
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </SGridOutter>
     </SContainer>
   );
