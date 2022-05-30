@@ -32,9 +32,9 @@ export const NavBar: React.FC = () => {
   }, [user]);
 
   const settingsActions = [
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    () => {
+      navigate("../profile");
+    },
     () => {
       navigate("../", { replace: true });
     },
