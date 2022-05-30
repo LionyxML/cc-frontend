@@ -12,8 +12,12 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import DeblurIcon from "@mui/icons-material/Deblur";
-import { indexOf, pathOr } from "ramda";
+import { indexOf, last, pathOr } from "ramda";
 import { useNavigate } from "react-router";
+import { Divider, ListItemIcon } from "@mui/material";
+import BadgeIcon from "@mui/icons-material/Badge";
+import LogoutIcon from "@mui/icons-material/Logout";
+import HomeIcon from "@mui/icons-material/Home";
 import { SAppBar } from "./styles";
 import { useUser } from "../../domain";
 
@@ -21,7 +25,10 @@ export const NavBar: React.FC = () => {
   const { logOff, user } = useUser();
 
   const pages = ["Produtos", "Planos", "Contato"];
+
   const settings = ["Perfil", "Principal", "Logout"];
+  const settingsIcons = [<BadgeIcon />, <HomeIcon />, <LogoutIcon />];
+
   const navigate = useNavigate();
   const [profilePic, setProfilepic] = useState<string | ArrayBuffer | null>("");
 
@@ -186,16 +193,26 @@ export const NavBar: React.FC = () => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography
-                      textAlign="center"
-                      onClick={() =>
-                        settingsActions[indexOf(setting, settings)]()
-                      }
+                  <>
+                    {setting === last(settings) ? <Divider /> : null}
+                    <MenuItem
+                      key={setting}
+                      onClick={handleCloseUserMenu}
+                      sx={{ width: "200px" }}
                     >
-                      {setting}
-                    </Typography>
-                  </MenuItem>
+                      <ListItemIcon>
+                        {settingsIcons[indexOf(setting, settings)]}
+                      </ListItemIcon>
+                      <Typography
+                        textAlign="center"
+                        onClick={() =>
+                          settingsActions[indexOf(setting, settings)]()
+                        }
+                      >
+                        {setting}
+                      </Typography>
+                    </MenuItem>
+                  </>
                 ))}
               </Menu>
             </Box>
