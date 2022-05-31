@@ -24,20 +24,24 @@ import { useUser } from "../../domain";
 export const NavBar: React.FC = () => {
   const { logOff, user } = useUser();
 
-  const pages = ["Produtos", "Planos", "Contato"];
-
-  const settings = ["Perfil", "Principal", "Logout"];
-  const settingsIcons = [<BadgeIcon />, <HomeIcon />, <LogoutIcon />];
-
   const navigate = useNavigate();
   const [profilePic, setProfilepic] = useState<string | ArrayBuffer | null>("");
 
-  useEffect(() => {
-    setProfilepic(
-      Buffer.from(pathOr("", ["profilePic", "data"], user), "base64")
-    );
-  }, [user]);
+  const pages = ["Produtos", "Planos", "Contato"];
+  const pagesActions = [
+    () => {
+      navigate("../products");
+    },
+    () => {
+      navigate("../plans");
+    },
+    () => {
+      navigate("../contacts");
+    },
+  ];
 
+  const settings = ["Perfil", "Principal", "Logout"];
+  const settingsIcons = [<BadgeIcon />, <HomeIcon />, <LogoutIcon />];
   const settingsActions = [
     () => {
       navigate("../profile");
@@ -66,6 +70,12 @@ export const NavBar: React.FC = () => {
   const handleCloseUserMenu = (): void => {
     setAnchorElUser(null);
   };
+
+  useEffect(() => {
+    setProfilepic(
+      Buffer.from(pathOr("", ["profilePic", "data"], user), "base64")
+    );
+  }, [user]);
 
   return (
     <SAppBar position="static">
@@ -121,7 +131,10 @@ export const NavBar: React.FC = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  key={page}
+                  onClick={pagesActions[indexOf(page, pages)]}
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -151,8 +164,8 @@ export const NavBar: React.FC = () => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
                 sx={{ my: 2, mx: 2, color: "white", display: "block" }}
+                onClick={pagesActions[indexOf(page, pages)]}
               >
                 {page}
               </Button>
@@ -193,26 +206,25 @@ export const NavBar: React.FC = () => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <>
+                  <MenuItem
+                    key={setting}
+                    onClick={handleCloseUserMenu}
+                    sx={{ width: "200px" }}
+                  >
                     {setting === last(settings) ? <Divider /> : null}
-                    <MenuItem
-                      key={setting}
-                      onClick={handleCloseUserMenu}
-                      sx={{ width: "200px" }}
+                    <ListItemIcon>
+                      {settingsIcons[indexOf(setting, settings)]}
+                    </ListItemIcon>
+                    <Typography
+                      ml={1}
+                      textAlign="center"
+                      onClick={() =>
+                        settingsActions[indexOf(setting, settings)]()
+                      }
                     >
-                      <ListItemIcon>
-                        {settingsIcons[indexOf(setting, settings)]}
-                      </ListItemIcon>
-                      <Typography
-                        textAlign="center"
-                        onClick={() =>
-                          settingsActions[indexOf(setting, settings)]()
-                        }
-                      >
-                        {setting}
-                      </Typography>
-                    </MenuItem>
-                  </>
+                      {setting}
+                    </Typography>
+                  </MenuItem>
                 ))}
               </Menu>
             </Box>

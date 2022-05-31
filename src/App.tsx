@@ -9,6 +9,7 @@ import {
   CertificatesPage,
   NotFoundPage,
   Home,
+  ProductsPage,
 } from "./pages";
 
 const App: React.FC = () => {
@@ -22,6 +23,7 @@ const App: React.FC = () => {
         <Route path="profile" element={<ProfilePage />} />
         <Route path="comparator" element={<ComparatorsPage />} />
         <Route path="certificates" element={<CertificatesPage />} />
+        <Route path="products" element={<ProductsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
