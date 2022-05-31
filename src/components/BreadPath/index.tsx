@@ -7,7 +7,7 @@ interface PropTypes {
 
 export const BreadPath: React.FC<PropTypes> = ({ path }) => {
   return (
-    <Breadcrumbs aria-label="breadcrumb">
+    <Breadcrumbs separator="›" aria-label="breadcrumb">
       <Link underline="hover" color="inherit" href="/">
         {path[0]}
       </Link>

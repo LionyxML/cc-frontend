@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Container,
   Paper,
   Table,
   TableBody,
@@ -32,14 +33,36 @@ export const ProfilePage: React.FC = () => {
   return (
     <SContainer>
       <BreadPath path={["CC", "Usuário", "Perfil"]} />
-      <Typography variant="h4" component="h1" marginTop={3}>
-        Perfil
-      </Typography>
-      <Typography variant="body1" margin={3}>
-        Esse é o seu perfil de usuário presente em nosso sistema.
-      </Typography>
       <SGrid>
-        <TableContainer component={Paper} sx={{ maxWidth: "sm", mt: "20px" }}>
+        <Container
+          disableGutters
+          maxWidth="sm"
+          component="main"
+          sx={{ pt: 2, pb: 6 }}
+        >
+          <Typography
+            component="h1"
+            variant="h2"
+            align="center"
+            color="text.primary"
+            gutterBottom
+          >
+            Perfil
+          </Typography>
+          <Typography
+            variant="h5"
+            align="center"
+            color="text.secondary"
+            component="p"
+          >
+            Essas são as informações do usuário presentes em nosso sistema:
+          </Typography>
+        </Container>
+        {/* End hero unit */}
+        <TableContainer
+          component={Paper}
+          sx={{ maxWidth: "sm", overflowY: "hidden" }}
+        >
           <Table aria-label="a dense table">
             <TableBody>
               <TableRow

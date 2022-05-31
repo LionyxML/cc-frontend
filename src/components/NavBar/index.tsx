@@ -181,9 +181,9 @@ export const NavBar: React.FC = () => {
                 justifyContent: "center",
               }}
             >
-              <Typography sx={{ mr: 2 }}>
+              {/* <Typography sx={{ mr: 2 }}>
                 Olá {pathOr("", ["firstName"], user)}
-              </Typography>
+              </Typography> */}
               <Tooltip title="+ opções">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="userProfilePic" src={String(profilePic)} />
