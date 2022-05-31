@@ -31,7 +31,7 @@ export const ProductsPage: React.FC = () => {
             color="text.primary"
             gutterBottom
           >
-            Páginas de Produtos
+            Nossos Produtos
           </Typography>
           <Typography
             variant="h5"
@@ -39,8 +39,8 @@ export const ProductsPage: React.FC = () => {
             color="text.secondary"
             component="p"
           >
-            Nossos produtos oferecem soluções Drop-In para várias necessidades
-            de auditorias no mercado brasileiro:
+            Oferecemos soluções Drop-In para várias necessidades de auditorias
+            no mercado brasileiro:
           </Typography>
         </Container>
 

@@ -7,3 +7,4 @@ export * from "./RegisterPage";
 export * from "./Home";
 export * from "./ProductsPage";
 export * from "./PlansPage";
+export * from "./ContactsPage";
