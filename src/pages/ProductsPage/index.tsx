@@ -1,50 +1,49 @@
 import {
-  Avatar,
   Button,
   Card,
   CardActions,
   CardContent,
   CardMedia,
+  Container,
   Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
   Typography,
 } from "@mui/material";
 
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router";
+import React from "react";
 import { BreadPath, CopyrightLine } from "../../components";
-import { useUser } from "../../domain";
-import { SContainer, SGrid, SItem } from "./styles";
+import { SContainer, SGrid } from "./styles";
 
 export const ProductsPage: React.FC = () => {
-  const navigate = useNavigate();
-  const { isTokenExpired, loadUser } = useUser();
-
-  useEffect(() => {
-    loadUser();
-
-    if (isTokenExpired()) {
-      navigate("../login", { replace: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <SContainer>
       <BreadPath path={["CC", "Institucional", "Produtos"]} />
-      <Typography variant="h4" component="h1" marginTop={3}>
-        Páginas de Produtos
-      </Typography>
-      <Typography variant="body1" margin={3}>
-        Nossos produtos oferecem soluções Drop-In para várias necessidades de
-        auditorias no mercado brasileiro
-      </Typography>
       <SGrid>
+        <Container
+          disableGutters
+          maxWidth="sm"
+          component="main"
+          sx={{ pt: 2, pb: 6 }}
+        >
+          <Typography
+            component="h1"
+            variant="h2"
+            align="center"
+            color="text.primary"
+            gutterBottom
+          >
+            Páginas de Produtos
+          </Typography>
+          <Typography
+            variant="h5"
+            align="center"
+            color="text.secondary"
+            component="p"
+          >
+            Nossos produtos oferecem soluções Drop-In para várias necessidades
+            de auditorias no mercado brasileiro:
+          </Typography>
+        </Container>
+
         <Grid container spacing={2}>
           <Grid item sm={8}>
             <Card>

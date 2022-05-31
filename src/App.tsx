@@ -10,6 +10,7 @@ import {
   NotFoundPage,
   Home,
   ProductsPage,
+  PlansPage,
 } from "./pages";
 
 const App: React.FC = () => {
@@ -24,6 +25,7 @@ const App: React.FC = () => {
         <Route path="comparator" element={<ComparatorsPage />} />
         <Route path="certificates" element={<CertificatesPage />} />
         <Route path="products" element={<ProductsPage />} />
+        <Route path="plans" element={<PlansPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
