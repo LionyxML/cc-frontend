@@ -208,20 +208,17 @@ export const NavBar: React.FC = () => {
                 {settings.map((setting) => (
                   <MenuItem
                     key={setting}
-                    onClick={handleCloseUserMenu}
+                    onClick={() => {
+                      settingsActions[indexOf(setting, settings)]();
+                      handleCloseUserMenu();
+                    }}
                     sx={{ width: "200px" }}
                   >
                     {setting === last(settings) ? <Divider /> : null}
                     <ListItemIcon>
                       {settingsIcons[indexOf(setting, settings)]}
                     </ListItemIcon>
-                    <Typography
-                      ml={1}
-                      textAlign="center"
-                      onClick={() =>
-                        settingsActions[indexOf(setting, settings)]()
-                      }
-                    >
+                    <Typography ml={1} textAlign="center">
                       {setting}
                     </Typography>
                   </MenuItem>
