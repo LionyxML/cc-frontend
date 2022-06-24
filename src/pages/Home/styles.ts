@@ -8,7 +8,7 @@ export const SContainer = styled(Container)`
     align-items: flex-start;
     flex-direction: column;
 
-    height: 100vh;
+    height: calc(100vh - 24px);
     max-width: 100%;
     margin: 0;
     padding: 0;
@@ -28,13 +28,12 @@ export const SGrid = styled(Container)`
     align-items: center;
     flex-direction: column;
 
-    height: 100vh;
+    height: calc(100vh - 24px);
     max-width: 100%;
     margin: 0;
     padding: 0;
+    padding-top: 10px;
     background-color: white;
     color: black;
-
-    padding: 30px;
   }
 `;

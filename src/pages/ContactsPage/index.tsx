@@ -15,7 +15,7 @@ export const ContactsPage: React.FC = () => {
           disableGutters
           maxWidth="sm"
           component="main"
-          sx={{ pt: 2, pb: 6 }}
+          sx={{ pt: 0, pb: 6 }}
         >
           <Typography
             component="h1"
@@ -32,7 +32,7 @@ export const ContactsPage: React.FC = () => {
             color="text.secondary"
             component="p"
           >
-            Estamos à disposição para melhor atender às suas necessidades:
+            Estamos à disposição para melhor atender as suas necessidades:
           </Typography>
         </Container>
         {/* End hero unit */}
@@ -40,7 +40,7 @@ export const ContactsPage: React.FC = () => {
           <Grid>
             <Grid item xs={12} md={6} pb={2}>
               <Typography variant="h4" align="center" color="text.secondary">
-                CC Systems
+                CC System
               </Typography>
             </Grid>
             <Typography variant="h6" align="center" color="text.secondary">

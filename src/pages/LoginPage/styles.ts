@@ -9,7 +9,7 @@ export const SContainer = styled(Container)`
     align-items: center;
     flex-direction: column;
 
-    height: 100vh;
+    height: calc(100vh - 24px);
     max-width: 100%;
     margin: 0;
     padding: 0;
@@ -27,7 +27,7 @@ export const SLink = styled(Link)`
 
 export const SGridOutter = styled(Grid)`
   && {
-    height: 100vh;
+    height: calc(100vh - 24px);
   }
 `;
 
@@ -53,7 +53,7 @@ export const SBox = styled(Box)`
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
+    height: calc(100vh - 24px);
     overflow-y: auto;
   }
 `;

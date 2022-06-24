@@ -1,8 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
+import { useNavigate } from "react-router";
+import { miliSecondsDelay } from "../utils";
 import { UserLoginDataType, UserRegisterDataType } from "./userHooks";
 
 export const useAPI = (): typeof hookReturn => {
+  const navigate = useNavigate();
+
+  const removeToken = (): void => {
+    localStorage.removeItem("@cc");
+  };
+
+  const logOff = (): void => {
+    removeToken();
+    navigate("../login", { replace: true });
+  };
+
   const api = axios.create({
     baseURL: String(process.env.REACT_APP_API_URL),
     timeout: 60000,
@@ -66,6 +79,10 @@ export const useAPI = (): typeof hookReturn => {
 
       return data;
     } catch (error: any) {
+      if (error.response.status === 401) {
+        logOff();
+        return;
+      }
       return {
         status: error.response.data.status,
         msg: error.response.data.msg,
@@ -78,6 +95,8 @@ export const useAPI = (): typeof hookReturn => {
     certificate: string
   ): Promise<any> => {
     try {
+      await miliSecondsDelay(3000);
+
       const { data } = await api.post(`certificates/upload`, {
         fileName,
         certificate,

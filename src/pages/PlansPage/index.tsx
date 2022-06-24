@@ -64,7 +64,7 @@ export const PlansPage: React.FC = () => {
           disableGutters
           maxWidth="sm"
           component="main"
-          sx={{ pt: 2, pb: 6 }}
+          sx={{ pt: 0, pb: 6 }}
         >
           <Typography
             component="h1"
